@@ -9,44 +9,34 @@ public class TargetStudy : Study
 
     [SerializeField]
     private int number;
+    int i = 0;
 
-    private List<GameObject> targets = new List<GameObject>();
+    public static GameObject CurrentTarget = null;
 
     // Use this for initialization
     void Start ()
     {
-        Camera main = Camera.main;
-        Vector3 playerPos = main.transform.position;
-        Vector3 playerDirection = main.transform.forward;
-        Vector3 spawnPos = playerPos + playerDirection * 1.5f;
-        int i = 0;
-
-        while (i < number)
-        {
-            var ex = Random.Range(-1.0f, 1f);
-            var ex2 = Random.Range(-1.0f, 1f);
-            Vector3 newPos = new Vector3(spawnPos.x, spawnPos.y + ex, spawnPos.z + ex2);
-            bool isGood = true;
-            foreach (var obj in targets)
-            {
-                if (Vector3.Distance(obj.transform.position, newPos) < 0.3f)
-                    isGood = false;
-            }
-            if (isGood)
-            {
-                GameObject t = Instantiate(target);
-                t.transform.position = newPos;
-                t.transform.LookAt(main.transform);
-                t.transform.parent = transform;
-                targets.Add(t);
-                i++;
-            }
-	    }
+      
     }
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		
-	}
+        if  (i < number && CurrentTarget == null)
+        {
+            Camera main = Camera.main;
+            Vector3 playerPos = main.transform.position;
+            Vector3 playerDirection = main.transform.forward;
+            Vector3 spawnPos = playerPos + playerDirection * 1.5f;
+
+            var ex = Random.Range(-1.0f, 1f);
+	        var ex2 = Random.Range(-1.0f, 1f);
+	        Vector3 newPos = new Vector3(spawnPos.x, spawnPos.y + ex, spawnPos.z + ex2);
+
+            CurrentTarget = Instantiate(target);
+            CurrentTarget.transform.position = newPos;
+            CurrentTarget.transform.LookAt(main.transform);
+            CurrentTarget.transform.parent = transform;
+	    }
+    }
 }

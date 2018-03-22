@@ -12,10 +12,14 @@ public class Target : ClickableObject
     void Start()
     {
         c = r.material.color;
+        Recorder.Instance.Launch();
     }
 
     public override void Click()
     {
+        Recorder.Instance.Stop();
+        Recorder.Instance.SaveFile();
+        TargetStudy.CurrentTarget = null;
         Destroy(gameObject);
     }
 

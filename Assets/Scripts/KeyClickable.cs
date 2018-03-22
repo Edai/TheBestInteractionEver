@@ -8,6 +8,6 @@ public class KeyClickable : ClickableObject
     public override void Click()
     {
         KeyboardRaycaster keyboard = FindObjectOfType<KeyboardRaycaster>();
-        keyboard.Click();
+        keyboard.Click(GetComponent<KeyboardItem>());
     }
 }

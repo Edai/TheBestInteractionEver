@@ -35,9 +35,10 @@ namespace CurvedVRKeyboard {
             RayCastKeyboard();
         }
 
-		public void Click()
+		public void Click(KeyboardItem item)
 		{
-			if (keyItemCurrent && keyboardStatus) {
+		    keyItemCurrent = item;
+            if (keyItemCurrent && keyboardStatus) {
 				keyItemCurrent.Click ();
 				keyboardStatus.HandleClick (keyItemCurrent);
 			}

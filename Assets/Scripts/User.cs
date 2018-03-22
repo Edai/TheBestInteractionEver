@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class User : Singleton<User>
 {
-    [SerializeField] private string name = "Mike";
-    [SerializeField] private int age = 20;
-    [SerializeField] private int height = 175;
-    [SerializeField] private Gender gender = Gender.MALE;
-    [SerializeField] private Laterality laterality = Laterality.RIGHT_HANDED;
-    [SerializeField] private bool HaveYouEverTriedVR = true;
+    [SerializeField] public string name = "Mike";
+    [SerializeField] public int age = 20;
+    [SerializeField] public int height = 175;
+    [SerializeField] public Gender gender = Gender.MALE;
+    [SerializeField] public Laterality laterality = Laterality.RIGHT_HANDED;
+    [SerializeField] public bool HaveYouEverTriedVR = true;
 }
 
 public enum Gender

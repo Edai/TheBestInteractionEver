@@ -29,7 +29,8 @@ public class CursorMovement : MonoBehaviour {
 
 		if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 20.0f))
 		{
-			transform.position = hit.point;
+            if (hit.collider && hit.collider.name.Contains("Cursor") == false)
+			    transform.position = hit.point;
         }
     }
 }
