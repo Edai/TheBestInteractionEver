@@ -13,6 +13,7 @@ public class CursorMovement : MonoBehaviour {
 	
 	}
 
+	/*
     void OnTriggerStay(Collider col)
     {
         ClickableObject o = col.gameObject.GetComponent<ClickableObject>();
@@ -22,6 +23,24 @@ public class CursorMovement : MonoBehaviour {
                 o.Click();
         }
     }
+    */
+
+	void OnTriggerStay(Collider col)
+	{
+		Target o = col.gameObject.GetComponent<Target>();
+		if (Input.GetKeyDown("space"))
+		{
+
+			if (o != null)
+				o.OnPress();
+		}
+		if (Input.GetKeyUp ("space")) {
+
+			if (o != null)
+				o.OnRelease();
+		}
+
+	}
 
     // Update is called once per frame
     void Update () {
@@ -29,8 +48,11 @@ public class CursorMovement : MonoBehaviour {
 
 		if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 20.0f))
 		{
-            if (hit.collider && hit.collider.name.Contains("Cursor") == false)
-			    transform.position = hit.point;
+			if (hit.collider && hit.collider.name.Contains ("Cursor") == false) {
+				transform.LookAt (head.transform);
+				transform.RotateAround (transform.position, transform.up,90);
+				transform.position = hit.point;
+			}
         }
     }
 }

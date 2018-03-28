@@ -33,7 +33,7 @@ public class TargetStudy : Study
 	// Update is called once per frame
 	void Update ()
 	{
-        keyEvent();
+        //keyEvent();
         if  (current_task < numberTasks && current_session < numberSessions && CurrentTarget == null)
         {
             Camera main = Camera.main;

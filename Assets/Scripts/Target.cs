@@ -7,12 +7,17 @@ public class Target : ClickableObject
     [SerializeField]
     private Renderer r;
 
+	private bool isHeadClicking;
+
     private Color c;
     
     void Start()
     {
         c = r.material.color;
-        Recorder.Instance.Launch();
+		isHeadClicking = false;
+		if (isHeadClicking == false) {
+			Recorder.Instance.Launch ();
+		}
     }
 
     public override void Click()
@@ -22,6 +27,24 @@ public class Target : ClickableObject
         TargetStudy.CurrentTarget = null;
         Destroy(gameObject);
     }
+
+	public void OnPress()
+	{
+
+		if (isHeadClicking == true) {
+			Recorder.Instance.Launch ();
+		}
+			
+	}
+
+	public void OnRelease()
+	{
+
+		Recorder.Instance.Stop();
+		Recorder.Instance.SaveFile();
+		TargetStudy.CurrentTarget = null;
+		Destroy(gameObject);
+	}
 
     void OnTriggerEnter(Collider col)
     {
