@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TargetStudy : Study
 {
@@ -8,8 +9,18 @@ public class TargetStudy : Study
     private GameObject target;
 
     [SerializeField]
-    private int number;
-    int i = 0;
+    private int numberTasks;
+
+    [SerializeField]
+    private int numberSessions;
+
+    [SerializeField]
+    private Text textInstruction;
+
+
+    private int current_task = 0;
+    private int current_session = 0;
+    
 
     public static GameObject CurrentTarget = null;
 
@@ -22,7 +33,8 @@ public class TargetStudy : Study
 	// Update is called once per frame
 	void Update ()
 	{
-        if  (i < number && CurrentTarget == null)
+        keyEvent();
+        if  (current_task < numberTasks && current_session < numberSessions && CurrentTarget == null)
         {
             Camera main = Camera.main;
             Vector3 playerPos = main.transform.position;
@@ -37,6 +49,34 @@ public class TargetStudy : Study
             CurrentTarget.transform.position = newPos;
             CurrentTarget.transform.LookAt(main.transform);
             CurrentTarget.transform.parent = transform;
-	    }
+
+
+            current_task++;
+            textInstruction.text = "Session: " + current_session.ToString() + " Task: " + current_task.ToString();
+            if (current_task >= numberTasks)
+            {
+                if(current_session >= numberSessions)
+                {
+                    current_task = 0;
+                    current_session = 0;
+                    textInstruction.text = "Done";
+                }
+                else
+                {
+                    current_session++;
+                    current_task = 0;
+                }
+            }
+            
+        }
+    }
+
+    //for debug
+    void keyEvent()
+    {
+        if(Input.GetKeyUp(KeyCode.Space))
+        {
+            Destroy(CurrentTarget);
+        }
     }
 }
