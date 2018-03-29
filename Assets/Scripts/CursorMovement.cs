@@ -110,7 +110,7 @@ public class CursorMovement : MonoBehaviour {
 			return false;
 
 		//check speet "slow to fast"
-		float[] speed = new float[10]
+		float[] speed = new float[10];
 		float[] acceler = new float[9];
 		Vector2 speed_each = new Vector2(0,0);
 		for (int k = indexcos - 5; k < intdexcos + 5; k++ )
