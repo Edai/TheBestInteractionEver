@@ -13,6 +13,6 @@ public abstract class Study : MonoBehaviour
     }
 
     [SerializeField]
-    private bool replayLastRecord = false;
+    public bool replayLastRecord = false;
    
 }

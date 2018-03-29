@@ -7,12 +7,15 @@ public class Target : ClickableObject
     [SerializeField]
     private Renderer r;
 
-	private bool isHeadClicking;
+    private TargetStudy study;
+
+    private bool isHeadClicking;
 
     private Color c;
     
     void Start()
     {
+        study = GameObject.FindObjectOfType<TargetStudy>();
         c = r.material.color;
 		isHeadClicking = false;
 		if (isHeadClicking == false) {
@@ -24,8 +27,9 @@ public class Target : ClickableObject
     {
         Recorder.Instance.Stop();
         Recorder.Instance.SaveFile();
-        TargetStudy.CurrentTarget = null;
-        Destroy(gameObject);
+        TargetRecorder.Instance.Stop();
+        TargetRecorder.Instance.SaveFile();
+        gameObject.SetActive(false);
     }
 
 	public void OnPress()
@@ -42,15 +46,17 @@ public class Target : ClickableObject
 
 		Recorder.Instance.Stop();
 		Recorder.Instance.SaveFile();
-		TargetStudy.CurrentTarget = null;
-		Destroy(gameObject);
-	}
+	    TargetRecorder.Instance.Stop();
+	    TargetRecorder.Instance.SaveFile();
+        gameObject.SetActive(false);
+    }
 
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.name.Contains("Cursor"))
         {
             r.material.color = new Color32(0xFF, 0x0, 0x0, 0xFF);
+            TargetRecorder.Instance.Launch();
         }
     }
 

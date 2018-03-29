@@ -1,12 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class TargetStudy : Study
 {
+    public GameObject currentTarget;
+
     [SerializeField]
-    private GameObject target;
+    private GameObject cursor;
 
     [SerializeField]
     private int numberTasks;
@@ -21,20 +27,72 @@ public class TargetStudy : Study
     private int current_task = 0;
     private int current_session = 0;
     
-
-    public static GameObject CurrentTarget = null;
+    private string[] contentFile = null;
+    private int indexContent = 0;
+    
 
     // Use this for initialization
     void Start ()
     {
-      
+        textInstruction.gameObject.SetActive(true);
+        currentTarget = Instantiate(currentTarget);
+        if (replayLastRecord == true)
+        {
+            string path = Application.persistentDataPath + "target_" + User.Instance.name + ".csv";
+            try
+            {
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    string fileContent = (reader.ReadToEnd());
+                    contentFile = fileContent.Split('\n');
+                    reader.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log("The file could not be read:");
+                Debug.Log(e.Message);
+                replayLastRecord = false;
+            }
+        }
+        
     }
-	
+
+    void PlayRecord()
+    {
+        if (indexContent < contentFile.Length && String.IsNullOrEmpty(contentFile[indexContent]) == false)
+        {
+            var line = contentFile[indexContent].Split(',');
+            currentTarget.gameObject.SetActive(true);
+            currentTarget.transform.LookAt(Camera.main.transform);
+            currentTarget.transform.position = new Vector3(
+                float.Parse(line[0], CultureInfo.InvariantCulture.NumberFormat),
+                float.Parse(line[1], CultureInfo.InvariantCulture.NumberFormat),
+                float.Parse(line[2], CultureInfo.InvariantCulture.NumberFormat));
+
+            cursor.transform.position = new Vector3(
+                float.Parse(line[3], CultureInfo.InvariantCulture.NumberFormat),
+                float.Parse(line[4], CultureInfo.InvariantCulture.NumberFormat),
+                float.Parse(line[5], CultureInfo.InvariantCulture.NumberFormat));
+        
+            indexContent++;
+        }
+        else
+        {
+            replayLastRecord = false;
+            currentTarget.gameObject.SetActive(false);
+        }
+    }
+
 	// Update is called once per frame
 	void Update ()
 	{
+	    if (replayLastRecord == true)
+	    {
+	        PlayRecord();
+	    }
         //keyEvent();
-        if  (current_task < numberTasks && current_session < numberSessions && CurrentTarget == null)
+        if  (replayLastRecord == false && current_task < numberTasks && current_session < numberSessions && currentTarget == null)
         {
             Camera main = Camera.main;
             Vector3 playerPos = main.transform.position;
@@ -45,14 +103,13 @@ public class TargetStudy : Study
 	        var ex2 = Random.Range(-1.0f, 1f);
 	        Vector3 newPos = new Vector3(spawnPos.x, spawnPos.y + ex, spawnPos.z + ex2);
 
-            CurrentTarget = Instantiate(target);
-            CurrentTarget.transform.position = newPos;
-            CurrentTarget.transform.LookAt(main.transform);
-            CurrentTarget.transform.parent = transform;
-
+            currentTarget.gameObject.SetActive(true);
+            currentTarget.transform.position = newPos;
+            currentTarget.transform.LookAt(main.transform);
+            currentTarget.transform.parent = transform;
 
             current_task++;
-            textInstruction.text = "Session: " + current_session.ToString() + " Task: " + current_task.ToString();
+            textInstruction.text = "Session: " + current_session.ToString() + " - Task: " + current_task.ToString();
             if (current_task >= numberTasks)
             {
                 if(current_session >= numberSessions)
@@ -76,7 +133,7 @@ public class TargetStudy : Study
     {
         if(Input.GetKeyUp(KeyCode.Space))
         {
-            Destroy(CurrentTarget);
+            currentTarget.gameObject.SetActive(false);
         }
     }
 }

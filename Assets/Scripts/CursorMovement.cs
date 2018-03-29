@@ -46,7 +46,8 @@ public class CursorMovement : MonoBehaviour {
     void Update () {
 		RaycastHit hit;
 
-		if (Physics.Raycast(head.transform.position, head.transform.forward, out hit, 20.0f))
+       if (StudyManager.Instance.CurrentStudy.replayLastRecord == false && 
+           Physics.Raycast(head.transform.position, head.transform.forward, out hit, 20.0f))
 		{
 			if (hit.collider && hit.collider.name.Contains ("Cursor") == false) {
 				transform.LookAt (head.transform);

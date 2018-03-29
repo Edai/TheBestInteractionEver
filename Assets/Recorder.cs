@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class Recorder : Singleton<Recorder>
 {
-    [SerializeField] private User user;
     [SerializeField] private Camera main;
+
     private List<string> cameraData;
     private bool recording = false;
 
@@ -20,6 +20,7 @@ public class Recorder : Singleton<Recorder>
     {
         recording = true;
     }
+
     public void Stop()
     {
         recording = false;
@@ -27,12 +28,12 @@ public class Recorder : Singleton<Recorder>
 
     public void SaveFile()
     {
-        string destination = Application.persistentDataPath + user.name + ".csv";
+        string destination = Application.persistentDataPath + User.Instance.name + ".csv";
         Debug.Log("File created : " + destination);
         using (StreamWriter writetext = new StreamWriter(destination, false))
         {
             writetext.WriteLine(String.Format("{0}, {1}, {2}, {3}, {4}, {5}",
-                user.name, user.age, user.gender, user.height, user.laterality.ToString(), user.HaveYouEverTriedVR.ToString()).ToLower());
+                User.Instance.name,  User.Instance.age,  User.Instance.gender,  User.Instance.height,  User.Instance.laterality.ToString(),  User.Instance.HaveYouEverTriedVR.ToString()).ToLower());
             foreach (var s in cameraData)
                 writetext.WriteLine(s);
             writetext.Close();

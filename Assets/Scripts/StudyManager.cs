@@ -9,7 +9,12 @@ public class StudyManager : Singleton<StudyManager>
 
     [SerializeField]
     private Study currentStudy;
-    
+
+    public Study CurrentStudy
+    {
+        get { return currentStudy; }
+    }
+
     // Use this for initialization
     void Start ()
     {
