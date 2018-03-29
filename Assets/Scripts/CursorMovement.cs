@@ -113,7 +113,7 @@ public class CursorMovement : MonoBehaviour {
 		float[] speed = new float[10];
 		float[] acceler = new float[9];
 		Vector2 speed_each = new Vector2(0,0);
-		for (int k = indexcos - 5; k < intdexcos + 5; k++ )
+		for (int k = indexcos - 5; k < indexcos + 5; k++ )
 		{
 			speed_each = cur2D[k]-cur2D[k+1];
 			speed[k-indexcos+5] = speed_each.magnitude;
@@ -122,8 +122,8 @@ public class CursorMovement : MonoBehaviour {
 		{
 			acceler[t] = speed[t+1]-speed[t]; 
 		}
-		acc_bf = (acceler[0]+acceler[1]+acceler[2]+acceler[3])/4;
-		acc_af = (acceler[5]+acceler[6]+acceler[7]+acceler[8])/4;
+		float acc_bf = (acceler[0]+acceler[1]+acceler[2]+acceler[3])/4;
+		float acc_af = (acceler[5]+acceler[6]+acceler[7]+acceler[8])/4;
 		if(acc_bf < 0 && acc_af > 0)
 			state++;
 		else 
