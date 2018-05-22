@@ -39,7 +39,7 @@ public class TargetStudy : Study
         Dwell = 3
     };
 
-    void giveTargetType()
+    void setTargetType()
     {
         int type = Random.Range(1, 4);
         Debug.Log("next type" + type.ToString());
@@ -60,17 +60,12 @@ public class TargetStudy : Study
         }
     }
 
-    // Use this for initialization
-    void Start ()
+    void setTargetPosition()
     {
-        textInstruction.gameObject.SetActive(true);
-        currentTarget = Instantiate(currentTarget);
-
-        // initiate the position of the target
         Camera main = Camera.main;
         Vector3 playerPos = main.transform.position;
-        float phi = Random.Range(0, 30);
-        float alpha = Random.Range(0, 30);
+        float phi = Random.Range(-30, 30);
+        float alpha = Random.Range(-15, 45);
         phi = phi / 180 * Mathf.PI;
         alpha = alpha / 180 * Mathf.PI;
         float radius = 2;
@@ -81,7 +76,20 @@ public class TargetStudy : Study
         currentTarget.transform.position = newPos;
         currentTarget.transform.LookAt(main.transform);
         currentTarget.transform.parent = transform;
-        giveTargetType();
+    }
+
+    // Use this for initialization
+    void Start ()
+    {
+        textInstruction.gameObject.SetActive(true);
+        currentTarget = Instantiate(currentTarget);
+
+        // initiate the position of the target
+        setTargetPosition();
+
+        // initiate the type of the target
+        setTargetType();
+
         if (replayLastRecord == true)
         {
             string path = Application.persistentDataPath + "target_" + User.Instance.name + ".csv";
@@ -152,23 +160,10 @@ public class TargetStudy : Study
             */
 
             // random on the sphere surface
-
-            float phi = Random.Range(30, 150);
-            float alpha = Random.Range(-60, 60);
-            phi = phi / 180 * Mathf.PI;
-            alpha = alpha / 180 * Mathf.PI;
-            float radius = 2;
-            Vector3 newPos = playerPos + new Vector3(radius * Mathf.Cos(alpha) * Mathf.Cos(phi), radius * Mathf.Sin(alpha), radius * Mathf.Cos(alpha) * Mathf.Sin(phi));
-            offset_Target_Head = newPos - playerPos;
-
-
-            currentTarget.gameObject.SetActive(true);
-            currentTarget.transform.position = newPos;
-            currentTarget.transform.LookAt(main.transform);
-            currentTarget.transform.parent = transform;
+            setTargetPosition();
 
             //type
-            giveTargetType();
+            setTargetType();
 
             current_task++;
             textInstruction.text = "Session: " + current_session.ToString() + " - Task: " + current_task.ToString();
