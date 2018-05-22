@@ -29,13 +29,59 @@ public class TargetStudy : Study
     
     private string[] contentFile = null;
     private int indexContent = 0;
-    
+
+    private Vector3 offset_Target_Head;
+
+    private enum targetType:int
+    {
+        Click = 1,
+        Pass = 2,
+        Dwell = 3
+    };
+
+    void giveTargetType()
+    {
+        int type = Random.Range(1, 4);
+        Debug.Log("next type" + type.ToString());
+        switch (type){
+            case (int)targetType.Click:
+                currentTarget.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.red;
+                break;
+            case (int)targetType.Dwell:
+                currentTarget.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.green;
+                break;
+            case (int)targetType.Pass:
+                currentTarget.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.blue;
+                break;
+            default:
+                Debug.Log("give type error");
+                break;
+
+        }
+    }
 
     // Use this for initialization
     void Start ()
     {
         textInstruction.gameObject.SetActive(true);
         currentTarget = Instantiate(currentTarget);
+
+        // initiate the position of the target
+        Camera main = Camera.main;
+        Vector3 playerPos = main.transform.position;
+        float phi = Random.Range(0, 30);
+        float alpha = Random.Range(0, 30);
+        phi = phi / 180 * Mathf.PI;
+        alpha = alpha / 180 * Mathf.PI;
+        float radius = 2;
+        Vector3 newPos = playerPos + new Vector3(radius * Mathf.Cos(alpha) * Mathf.Cos(phi), radius * Mathf.Sin(alpha), radius * Mathf.Cos(alpha) * Mathf.Sin(phi));
+        offset_Target_Head = newPos - playerPos;
+
+        currentTarget.gameObject.SetActive(true);
+        currentTarget.transform.position = newPos;
+        currentTarget.transform.LookAt(main.transform);
+        currentTarget.transform.parent = transform;
+        giveTargetType();
         if (replayLastRecord == true)
         {
             string path = Application.persistentDataPath + "target_" + User.Instance.name + ".csv";
@@ -92,21 +138,37 @@ public class TargetStudy : Study
 	        PlayRecord();
 	    }
         //keyEvent();
-        if  (replayLastRecord == false && current_task < numberTasks && current_session < numberSessions && currentTarget == null)
+		if  (replayLastRecord == false && current_task < numberTasks && current_session < numberSessions && currentTarget.activeInHierarchy == false)
         {
             Camera main = Camera.main;
             Vector3 playerPos = main.transform.position;
             Vector3 playerDirection = main.transform.forward;
             Vector3 spawnPos = playerPos + playerDirection * 1.5f;
 
+            /* random in a cubic region
             var ex = Random.Range(-1.0f, 1f);
 	        var ex2 = Random.Range(-1.0f, 1f);
 	        Vector3 newPos = new Vector3(spawnPos.x, spawnPos.y + ex, spawnPos.z + ex2);
+            */
+
+            // random on the sphere surface
+
+            float phi = Random.Range(30, 150);
+            float alpha = Random.Range(-60, 60);
+            phi = phi / 180 * Mathf.PI;
+            alpha = alpha / 180 * Mathf.PI;
+            float radius = 2;
+            Vector3 newPos = playerPos + new Vector3(radius * Mathf.Cos(alpha) * Mathf.Cos(phi), radius * Mathf.Sin(alpha), radius * Mathf.Cos(alpha) * Mathf.Sin(phi));
+            offset_Target_Head = newPos - playerPos;
+
 
             currentTarget.gameObject.SetActive(true);
             currentTarget.transform.position = newPos;
             currentTarget.transform.LookAt(main.transform);
             currentTarget.transform.parent = transform;
+
+            //type
+            giveTargetType();
 
             current_task++;
             textInstruction.text = "Session: " + current_session.ToString() + " - Task: " + current_task.ToString();
@@ -125,6 +187,10 @@ public class TargetStudy : Study
                 }
             }
             
+        }
+        else // just keep object relatively fixed to the head
+        {
+            currentTarget.transform.position = Camera.main.transform.position + offset_Target_Head;
         }
     }
 
