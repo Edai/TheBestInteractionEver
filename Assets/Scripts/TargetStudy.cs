@@ -29,6 +29,7 @@ public class TargetStudy : Study
     
     private string[] contentFile = null;
     private int indexContent = 0;
+    private int[] order_task;
 
     private Vector3 offset_Target_Head;
 
@@ -39,11 +40,27 @@ public class TargetStudy : Study
         Dwell = 3
     };
 
+    public int typenow;
+
+    void setTaskOrder()
+    {
+        StreamReader orderfile = new StreamReader("python/order.txt");
+        string orders = orderfile.ReadLine();
+        order_task = new int[numberSessions * numberTasks];
+
+        string[] order_string = orders.Split(' ');
+        for(int i = 0;i < numberSessions*numberTasks;i++)
+        {
+            Debug.Log(order_string[i]);
+            order_task[i] = Convert.ToInt32(order_string[i]);
+        }
+    }
+
     void setTargetType()
     {
-        int type = Random.Range(1, 4);
-        Debug.Log("next type" + type.ToString());
-        switch (type){
+        typenow = order_task[current_session * numberTasks + current_task];
+        //typenow = Random.Range(1, 4);
+        switch (typenow){
             case (int)targetType.Click:
                 currentTarget.transform.GetChild(0).gameObject.GetComponent<Renderer>().material.color = Color.red;
                 break;
@@ -83,6 +100,9 @@ public class TargetStudy : Study
     {
         textInstruction.gameObject.SetActive(true);
         currentTarget = Instantiate(currentTarget);
+
+        //read task order
+        setTaskOrder();
 
         // initiate the position of the target
         setTargetPosition();
