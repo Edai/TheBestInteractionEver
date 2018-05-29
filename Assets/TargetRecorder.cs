@@ -12,6 +12,7 @@ public class TargetRecorder : Singleton<TargetRecorder> {
     private List<string> data;
     private bool recording = false;
     private bool isinside = false;
+    private int count_target = 0;
 
     void Start()
     {
@@ -29,20 +30,25 @@ public class TargetRecorder : Singleton<TargetRecorder> {
     }
     public void Stop()
     {
-        recording = false;
+        recording = false;    
+    }
+    public void Leave()
+    {
         isinside = false;
     }
 
     public void SaveFile()
     {
+        count_target++;
         string destination = Application.persistentDataPath + "target_" + User.Instance.name + ".csv";
-        Debug.Log("File created : " + destination);
+        //Debug.Log("File created : " + destination);
         using (StreamWriter writetext = new StreamWriter(destination, true))
         {
             foreach (var s in data)
                 writetext.WriteLine(s);
             writetext.Close();
         }
+        data = new List<string>();
     }
 
     // Update is called once per frame
@@ -57,7 +63,7 @@ public class TargetRecorder : Singleton<TargetRecorder> {
         Vector3 targetPositionRelative = study.currentTarget.transform.position - head.transform.position;
         Vector3 cursorPositionRelative = cursor.transform.position - head.transform.position;
 
-        data.Add(String.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}",
+        data.Add(String.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}", count_target, study.typenow, study.sizenow,
                 targetPositionRelative.x, targetPositionRelative.y, targetPositionRelative.z,
                 cursorPositionRelative.x, cursorPositionRelative.y, cursorPositionRelative.z, Convert.ToInt32(recording), Convert.ToInt32(isinside)));
 

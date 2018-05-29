@@ -103,7 +103,7 @@ public class Target : ClickableObject
             TargetRecorder.Instance.SaveFile();
             transform.parent.gameObject.SetActive(false);
         }
-        Debug.Log(islegal);
+        //Debug.Log(islegal);
         Recorder.Instance.Stop();
         TargetRecorder.Instance.Stop();
     }
@@ -141,15 +141,11 @@ public class Target : ClickableObject
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.name.Contains("Cursor"))
-        {
+        {   
             c = r.material.color;
             r.material.color = c / 1.2f + new Color(0, 0, 0, 0.5f);
             TargetRecorder.Instance.Enter();
-            if (study.typenow == 3) // pass task
-            {
-                timer_count = durationPass;
-            }
-            else if (study.typenow == 2) // dwell task
+            if (study.typenow == 2) // dwell task
             {
                 timer_count = durationDwell;
             }
@@ -161,7 +157,7 @@ public class Target : ClickableObject
         r.material.color = c;
         TargetRecorder.Instance.Leave();
         //timeout for pass and dwell
-        if (timeout == true)
+        if (timeout == true || study.typenow == 3)
         {
             Recorder.Instance.SaveFile();
             TargetRecorder.Instance.SaveFile();
