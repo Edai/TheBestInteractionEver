@@ -10,6 +10,17 @@ public class User : Singleton<User>
     [SerializeField] public Gender gender = Gender.MALE;
     [SerializeField] public Laterality laterality = Laterality.RIGHT_HANDED;
     [SerializeField] public bool HaveYouEverTriedVR = true;
+    [SerializeField]
+    public int Familiarity_VR = 0;
+    [SerializeField]
+    public int Familiarity_AR = 0;
+    [SerializeField]
+    public int Familiarity_Head = 0;
+    [SerializeField]
+    public int Familiarity_Gesture = 0;
+    [SerializeField]
+    public int Sickness_VR = 0;
+
 }
 
 public enum Gender

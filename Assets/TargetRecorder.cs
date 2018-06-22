@@ -39,8 +39,8 @@ public class TargetRecorder : Singleton<TargetRecorder> {
 
     public void SaveFile()
     {
-        count_target++;
-        string destination = Application.persistentDataPath + "target_" + User.Instance.name + ".csv";
+        
+        string destination = Application.persistentDataPath + "/target_" + User.Instance.name + ".csv";
         //Debug.Log("File created : " + destination);
         using (StreamWriter writetext = new StreamWriter(destination, true))
         {
@@ -49,8 +49,14 @@ public class TargetRecorder : Singleton<TargetRecorder> {
             writetext.Close();
         }
         data = new List<string>();
+        count_target++;
     }
 
+    public void DeleteRecord()
+    {
+        count_target--;
+        data.Add("-");
+    }
     // Update is called once per frame
     void Update()
     {
